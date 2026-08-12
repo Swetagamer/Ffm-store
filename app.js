@@ -186,3 +186,13 @@ function submitOrder() {
     "<br>UTR: " + utr +
     "<br>We'll process your order after the payment is manually verified.";
 }
+
+// Expose handlers on window so inline onclick attributes in index.html keep
+// working after Vite bundles this file as an ES module (module scope is not global).
+window.selectCategory = selectCategory;
+window.openCheckout = openCheckout;
+window.closeCheckout = closeCheckout;
+window.showPayment = showPayment;
+window.closePayment = closePayment;
+window.copyUPI = copyUPI;
+window.submitOrder = submitOrder;
