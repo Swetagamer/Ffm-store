@@ -60,8 +60,8 @@
       <div><b>2</b> Copy the UTR / transaction ID after payment.</div>
       <div><b>3</b> Submit the UTR below. Your order stays pending until verified.</div>
     </div>
-    <label>UTR / Transaction ID<input id="utr" placeholder="Enter UTR after payment"></label>
-    <button class="btn full" onclick="submitOrder()">Submit Payment Details</button>
+    <label>UTR / Transaction ID<input id="utr" inputmode="numeric" placeholder="Enter UTR after payment"></label>
+    <button id="submitOrderBtn" class="btn full" onclick="submitOrder()">Submit Payment Details</button>
     <p id="status" class="status"></p>
   </div>
 </div>

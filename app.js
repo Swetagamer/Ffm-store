@@ -4,7 +4,8 @@ const categories = [
   { id: "likes", name: "Profile Like Bot" },
   { id: "craftland", name: "Craftland Bots" },
   { id: "guild", name: "Guild Glory" },
-  { id: "diamonds", name: "Free Fire Carding" }
+  { id: "diamonds", name: "Free Fire Carding" },
+  { id: "playstore", name: "Play Store Redeem Code" }
 ];
 
 const services = [
@@ -29,7 +30,13 @@ const services = [
 
   // Free Fire Carding
   { cat: "diamonds", name: "4,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 1000 },
-  { cat: "diamonds", name: "10,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 2000 }
+  { cat: "diamonds", name: "10,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 2000 },
+  { cat: "diamonds", name: "12,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 3000 },
+
+  // Play Store Redeem Code
+  { cat: "playstore", name: "₹600 Redeem Code", desc: "Google Play Store redeem code", meta: "Value: ₹600", price: 300 },
+  { cat: "playstore", name: "₹1,400 Redeem Code", desc: "Google Play Store redeem code", meta: "Value: ₹1,400", price: 800 },
+  { cat: "playstore", name: "₹1,800 Redeem Code", desc: "Google Play Store redeem code", meta: "Value: ₹1,800", price: 1200 }
 ];
 
 let selected = null;
@@ -113,7 +120,27 @@ function showPayment() {
   }
 
   closeCheckout();
+  resetPaymentState();
   document.getElementById("payment").classList.remove("hidden");
+}
+
+function resetPaymentState() {
+  const utrInput = document.getElementById("utr");
+  const status = document.getElementById("status");
+  const btn = document.getElementById("submitOrderBtn");
+
+  if (utrInput) {
+    utrInput.value = "";
+    utrInput.disabled = false;
+  }
+  if (status) {
+    status.className = "status";
+    status.textContent = "";
+  }
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = "Submit Payment Details";
+  }
 }
 
 function closePayment() {
@@ -129,13 +156,33 @@ function copyUPI() {
 }
 
 function submitOrder() {
-  const utr = document.getElementById("utr").value.trim();
+  const utrInput = document.getElementById("utr");
+  const utr = utrInput.value.trim();
+  const status = document.getElementById("status");
 
-  if (!utr) {
-    alert("Payment ke baad UTR / Transaction ID enter karo.");
+  // A valid UTR / UPI transaction reference is typically 12 digits,
+  // but accept any 6+ digit reference to stay flexible.
+  if (!/^\d{6,}$/.test(utr)) {
+    status.className = "status error";
+    status.textContent =
+      "Enter a valid UTR / Transaction ID (numbers only, from your UPI app).";
     return;
   }
 
-  document.getElementById("status").textContent =
-    "Submitted. Your payment is pending manual verification.";
+  const btn = document.getElementById("submitOrderBtn");
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Order Submitted";
+  }
+  if (utrInput) utrInput.disabled = true;
+
+  const orderName = selected ? selected.name : "Your order";
+  const orderPrice = selected ? priceLabel(selected) : "";
+
+  status.className = "status success";
+  status.innerHTML =
+    "<b>Order received &mdash; pending verification.</b><br>" +
+    orderName + (orderPrice ? " (" + orderPrice + ")" : "") +
+    "<br>UTR: " + utr +
+    "<br>We'll process your order after the payment is manually verified.";
 }
