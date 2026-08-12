@@ -1,38 +1,72 @@
 const UPI = "ffcarderupta@fam";
 
 const services = [
-  {name:"100 Likes", desc:"Profile likes • 1 day", price:10},
-  {name:"220 Likes", desc:"Profile likes • 1 day", price:20},
-  {name:"220 Likes Daily", desc:"Daily likes • 30 days", price:300},
-  {name:"220 Likes Daily", desc:"Daily likes • 45 days", price:410},
-  {name:"220 Likes Daily", desc:"Daily likes • 60 days", price:550},
-  {name:"Custom Order", desc:"Need a different package? Contact admin.", price:0}
+  {
+    name: "100 Likes",
+    desc: "Profile likes • 1 day",
+    price: 10
+  },
+  {
+    name: "220 Likes",
+    desc: "Profile likes • 1 day",
+    price: 20
+  },
+  {
+    name: "220 Likes Daily",
+    desc: "Daily likes • 30 days",
+    price: 300
+  },
+  {
+    name: "220 Likes Daily",
+    desc: "Daily likes • 45 days",
+    price: 410
+  },
+  {
+    name: "220 Likes Daily",
+    desc: "Daily likes • 60 days",
+    price: 550
+  },
+  {
+    name: "Custom Order",
+    desc: "Need a different package? Contact admin.",
+    price: 0
+  }
 ];
 
 let selected = null;
 
-const grid = document.getElementById("serviceGrid");
+document.addEventListener("DOMContentLoaded", function () {
+  const grid = document.getElementById("serviceGrid");
 
-if (grid) {
+  if (!grid) {
+    console.error("serviceGrid not found");
+    return;
+  }
+
   grid.innerHTML = services.map((s, i) => `
     <article class="card">
       <p class="eyebrow">SERVICE ${String(i + 1).padStart(2, "0")}</p>
       <h3>${s.name}</h3>
       <p>${s.desc}</p>
+
       <div class="row">
-        <span class="price">${s.price ? "₹" + s.price : "Custom"}</span>
+        <span class="price">
+          ${s.price ? "₹" + s.price : "Custom"}
+        </span>
+
         <button class="smallbtn" onclick="openCheckout(${i})">
           Buy now
         </button>
       </div>
     </article>
   `).join("");
-}
+});
 
-function openCheckout(i) {
-  selected = services[i];
+function openCheckout(index) {
+  selected = services[index];
 
   document.getElementById("checkoutTitle").textContent = selected.name;
+
   document.getElementById("checkoutPrice").textContent =
     selected.price ? "₹" + selected.price : "Custom";
 
@@ -60,7 +94,10 @@ function closePayment() {
 }
 
 function copyUPI() {
-  navigator.clipboard?.writeText(UPI);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(UPI);
+  }
+
   alert("UPI ID copied: " + UPI);
 }
 
@@ -68,7 +105,7 @@ function submitOrder() {
   const utr = document.getElementById("utr").value.trim();
 
   if (!utr) {
-    alert("Payment ke baad UTR enter karo.");
+    alert("Payment ke baad UTR / Transaction ID enter karo.");
     return;
   }
 
