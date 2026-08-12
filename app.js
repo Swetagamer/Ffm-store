@@ -1,3 +1,5 @@
+import { supabase } from "./lib/supabaseClient.js";
+
 const UPI = "ffcarderupta@fam";
 
 const categories = [
@@ -178,7 +180,7 @@ function copyUPI() {
   alert("UPI ID copied: " + UPI);
 }
 
-function submitOrder() {
+async function submitOrder() {
   const utrInput = document.getElementById("utr");
   const utr = utrInput ? utrInput.value.trim() : "";
 
@@ -191,12 +193,45 @@ function submitOrder() {
   const btn = document.getElementById("submitBtn");
   const status = document.getElementById("status");
   const hint = document.getElementById("utrHint");
+  const uid = (document.getElementById("uid")?.value || "").trim();
+  const player = (document.getElementById("player")?.value || "").trim();
 
+  // loading state
   if (btn) {
     btn.disabled = true;
-    btn.textContent = "Order Submitted";
+    btn.textContent = "Submitting…";
   }
   if (hint) hint.textContent = "";
+  if (status) {
+    status.classList.remove("ok", "err");
+    status.textContent = "";
+  }
+
+  const { error } = await supabase.from("orders").insert({
+    category: selected ? selected.cat : null,
+    service_name: selected ? selected.name : "Unknown service",
+    uid: uid || null,
+    player_name: player || null,
+    amount: selected ? Number(selected.price) || 0 : 0,
+    utr: utr,
+    status: "pending",
+  });
+
+  if (error) {
+    console.log("[v0] Order insert failed:", error.message);
+    if (status) {
+      status.classList.add("err");
+      status.textContent =
+        "Could not submit your order. Please check your connection and try again.";
+    }
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Submit Order";
+    }
+    return;
+  }
+
+  if (btn) btn.textContent = "Order Submitted";
   if (status) {
     status.classList.add("ok");
     status.innerHTML =
@@ -205,3 +240,16 @@ function submitOrder() {
       "</b>.<br>Payment is <b>pending manual verification</b>. We will confirm shortly.";
   }
 }
+
+// Expose handlers referenced by inline onclick/oninput attributes on window,
+// since this file now runs as an ES module (its own scope, not global).
+Object.assign(window, {
+  openCheckout,
+  closeCheckout,
+  selectCategory,
+  showPayment,
+  closePayment,
+  copyUPI,
+  submitOrder,
+  onUtrInput,
+});
