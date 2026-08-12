@@ -60,8 +60,9 @@
       <div><b>2</b> Copy the UTR / transaction ID after payment.</div>
       <div><b>3</b> Submit the UTR below. Your order stays pending until verified.</div>
     </div>
-    <label>UTR / Transaction ID<input id="utr" placeholder="Enter UTR after payment"></label>
-    <button class="btn full" onclick="submitOrder()">Submit Payment Details</button>
+    <label>UTR / Transaction ID<input id="utr" inputmode="numeric" autocomplete="off" placeholder="Enter UTR after payment" oninput="onUtrInput()"></label>
+    <button id="submitBtn" class="btn full" onclick="submitOrder()" disabled>Submit Order</button>
+    <p id="utrHint" class="hint">Enter the UTR / Transaction ID from your UPI app to submit.</p>
     <p id="status" class="status"></p>
   </div>
 </div>

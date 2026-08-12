@@ -4,7 +4,8 @@ const categories = [
   { id: "likes", name: "Profile Like Bot" },
   { id: "craftland", name: "Craftland Bots" },
   { id: "guild", name: "Guild Glory" },
-  { id: "diamonds", name: "Free Fire Carding" }
+  { id: "diamonds", name: "Free Fire Carding" },
+  { id: "playstore", name: "Play Store Redeem Code" }
 ];
 
 const services = [
@@ -29,7 +30,13 @@ const services = [
 
   // Free Fire Carding
   { cat: "diamonds", name: "4,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 1000 },
-  { cat: "diamonds", name: "10,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 2000 }
+  { cat: "diamonds", name: "10,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 2000 },
+  { cat: "diamonds", name: "12,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 3000 },
+
+  // Play Store Redeem Code
+  { cat: "playstore", name: "₹600 Redeem Code", desc: "Google Play Store redeem code", meta: "Value: ₹600", price: 300 },
+  { cat: "playstore", name: "₹1,400 Redeem Code", desc: "Google Play Store redeem code", meta: "Value: ₹1,400", price: 800 },
+  { cat: "playstore", name: "₹1,800 Redeem Code", desc: "Google Play Store redeem code", meta: "Value: ₹1,800", price: 1200 }
 ];
 
 let selected = null;
@@ -113,7 +120,50 @@ function showPayment() {
   }
 
   closeCheckout();
+
+  // reset payment/UTR state each time payment opens
+  const utr = document.getElementById("utr");
+  const status = document.getElementById("status");
+  const hint = document.getElementById("utrHint");
+  if (utr) utr.value = "";
+  if (status) status.textContent = "";
+  if (hint) {
+    hint.textContent = "Enter the UTR / Transaction ID from your UPI app to submit.";
+    hint.classList.remove("ok");
+  }
+  updateSubmitState();
+
   document.getElementById("payment").classList.remove("hidden");
+}
+
+// A UTR / UPI transaction reference is typically a 12-digit number,
+// but we accept any 6+ character alphanumeric reference to be safe.
+function isValidUtr(value) {
+  const v = (value || "").trim();
+  return /^[a-zA-Z0-9]{6,}$/.test(v);
+}
+
+function updateSubmitState() {
+  const btn = document.getElementById("submitBtn");
+  const utr = document.getElementById("utr");
+  if (!btn || !utr) return;
+  btn.disabled = !isValidUtr(utr.value);
+}
+
+function onUtrInput() {
+  updateSubmitState();
+  const hint = document.getElementById("utrHint");
+  const status = document.getElementById("status");
+  const utr = document.getElementById("utr");
+  if (status) status.textContent = "";
+  if (!hint || !utr) return;
+  if (utr.value.trim() && !isValidUtr(utr.value)) {
+    hint.textContent = "UTR looks too short. Enter the full transaction ID.";
+    hint.classList.remove("ok");
+  } else {
+    hint.textContent = "Enter the UTR / Transaction ID from your UPI app to submit.";
+    hint.classList.remove("ok");
+  }
 }
 
 function closePayment() {
@@ -129,13 +179,29 @@ function copyUPI() {
 }
 
 function submitOrder() {
-  const utr = document.getElementById("utr").value.trim();
+  const utrInput = document.getElementById("utr");
+  const utr = utrInput ? utrInput.value.trim() : "";
 
-  if (!utr) {
-    alert("Payment ke baad UTR / Transaction ID enter karo.");
+  if (!isValidUtr(utr)) {
+    alert("Payment ke baad valid UTR / Transaction ID enter karo.");
+    if (utrInput) utrInput.focus();
     return;
   }
 
-  document.getElementById("status").textContent =
-    "Submitted. Your payment is pending manual verification.";
+  const btn = document.getElementById("submitBtn");
+  const status = document.getElementById("status");
+  const hint = document.getElementById("utrHint");
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Order Submitted";
+  }
+  if (hint) hint.textContent = "";
+  if (status) {
+    status.classList.add("ok");
+    status.innerHTML =
+      "&#10003; Order received for <b>" +
+      (selected ? selected.name : "your service") +
+      "</b>.<br>Payment is <b>pending manual verification</b>. We will confirm shortly.";
+  }
 }
