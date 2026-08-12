@@ -3,7 +3,7 @@ const UPI = "ffcarderupta@fam";
 const categories = [
   { id: "likes", name: "Profile Like Bot" },
   { id: "craftland", name: "Craftland Bots" },
-  { id: "guild", name: "Profile Bots" },
+  { id: "guild", name: "Guild Glory" },
   { id: "diamonds", name: "Free Fire Carding" }
 ];
 
