@@ -139,3 +139,13 @@ function submitOrder() {
   document.getElementById("status").textContent =
     "Submitted. Your payment is pending manual verification.";
 }
+
+// Expose handlers to the global scope so inline onclick="" attributes work
+// when this file is loaded as an ES module (required for the Vite production build).
+window.selectCategory = selectCategory;
+window.openCheckout = openCheckout;
+window.closeCheckout = closeCheckout;
+window.showPayment = showPayment;
+window.closePayment = closePayment;
+window.copyUPI = copyUPI;
+window.submitOrder = submitOrder;
