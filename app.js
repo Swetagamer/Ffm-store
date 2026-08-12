@@ -4,7 +4,7 @@ const categories = [
   { id: "likes", name: "Profile Like Bot" },
   { id: "craftland", name: "Craftland Bots" },
   { id: "guild", name: "Profile Bots" },
-  { id: "diamonds", name: "Free Fire Diamonds" }
+  { id: "diamonds", name: "Free Fire Carding" }
 ];
 
 const services = [
@@ -27,9 +27,9 @@ const services = [
   { cat: "guild", name: "Guild Level 7", desc: "Guild Glory • Guild level 7", meta: "Delivery: 3 days", price: 500 },
   { cat: "guild", name: "Guild Region Top 15", desc: "Guild Glory • Region Top 15", meta: "Delivery: 58 hours", price: 1400 },
 
-  // Free Fire Diamonds
-  { cat: "diamonds", name: "4,000 Diamonds", desc: "Free Fire diamonds top-up", meta: "", price: 1000 },
-  { cat: "diamonds", name: "10,000 Diamonds", desc: "Free Fire diamonds top-up", meta: "", price: 2000 }
+  // Free Fire Carding
+  { cat: "diamonds", name: "4,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 1000 },
+  { cat: "diamonds", name: "10,000 Diamonds", desc: "Free Fire carding top-up", meta: "", price: 2000 }
 ];
 
 let selected = null;
