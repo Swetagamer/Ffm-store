@@ -1,20 +1,16 @@
 const UPI = "ffcarderupta@fam";
 
 const categories = [
-  { id: "likes", name: "Profile Like Bot" },
+  { id: "unsubscribe", name: "Unsubscribe" },
   { id: "craftland", name: "Craftland Bots" },
   { id: "guild", name: "Guild Glory" },
   { id: "diamonds", name: "Free Fire Carding" }
 ];
 
 const services = [
-  // Profile Like Bot
-  { cat: "likes", name: "100 Likes", desc: "Profile likes", meta: "Delivery: 1 day", price: 10 },
-  { cat: "likes", name: "220 Likes", desc: "Profile likes", meta: "Delivery: 1 day", price: 20 },
-  { cat: "likes", name: "220 Likes Daily", desc: "Daily profile likes", meta: "Duration: 30 days", price: 300 },
-  { cat: "likes", name: "220 Likes Daily", desc: "Daily profile likes", meta: "Duration: 45 days", price: 410 },
-  { cat: "likes", name: "220 Likes Daily", desc: "Daily profile likes", meta: "Duration: 60 days", price: 550 },
-  { cat: "likes", name: "Custom Order", desc: "Need a different package? Contact admin.", meta: "", price: 0 },
+  // Unsubscribe (requires Gmail address)
+  { cat: "unsubscribe", name: "Single Unsubscribe", desc: "Unsubscribe a single Gmail account", meta: "Delivery: 1 day", price: 600 },
+  { cat: "unsubscribe", name: "Double Unsubscribe", desc: "Unsubscribe a double Gmail account", meta: "Delivery: 1 day", price: 1000 },
 
   // Craftland Bots
   { cat: "craftland", name: "Craftland Followers", desc: "₹25 per 50 followers", meta: "Limit 200/day • 6hr–24hr", price: 25 },
@@ -90,12 +86,38 @@ document.addEventListener("DOMContentLoaded", function () {
   renderCards();
 });
 
+function isUnsubscribe(s) {
+  return s && s.cat === "unsubscribe";
+}
+
 function openCheckout(index) {
   selected = services[index];
 
   document.getElementById("checkoutTitle").textContent = selected.name;
 
   document.getElementById("checkoutPrice").textContent = priceLabel(selected);
+
+  const idInput = document.getElementById("uid");
+  const labelText = document.getElementById("uidLabelText");
+  const playerField = document.getElementById("playerField");
+
+  if (isUnsubscribe(selected)) {
+    // Unsubscribe services collect a Gmail address instead of a Free Fire UID
+    labelText.textContent = "Gmail address";
+    idInput.value = "";
+    idInput.setAttribute("inputmode", "email");
+    idInput.setAttribute("type", "email");
+    idInput.setAttribute("placeholder", "yourname@gmail.com");
+    if (playerField) playerField.style.display = "none";
+  } else {
+    // All other services keep the Free Fire UID input
+    labelText.textContent = "Free Fire UID";
+    idInput.value = "";
+    idInput.setAttribute("inputmode", "numeric");
+    idInput.setAttribute("type", "text");
+    idInput.setAttribute("placeholder", "Enter UID");
+    if (playerField) playerField.style.display = "";
+  }
 
   document.getElementById("checkout").classList.remove("hidden");
 }
@@ -105,11 +127,26 @@ function closeCheckout() {
 }
 
 function showPayment() {
-  const uid = document.getElementById("uid").value.trim();
+  const value = document.getElementById("uid").value.trim();
 
-  if (!uid) {
-    alert("Free Fire UID enter karo.");
-    return;
+  if (isUnsubscribe(selected)) {
+    // Validate that the input looks like a valid Gmail address
+    const gmailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+
+    if (!value) {
+      alert("Gmail address enter karo.");
+      return;
+    }
+
+    if (!gmailPattern.test(value)) {
+      alert("Sahi Gmail address enter karo (e.g. yourname@gmail.com).");
+      return;
+    }
+  } else {
+    if (!value) {
+      alert("Free Fire UID enter karo.");
+      return;
+    }
   }
 
   closeCheckout();
