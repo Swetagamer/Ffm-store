@@ -9,8 +9,8 @@ const categories = [
 
 const services = [
   // Unsubscribe (requires Gmail address)
-  { cat: "unsubscribe", name: "Single Unsubscribe", desc: "Unsubscribe a single Gmail account", meta: "Delivery: 1 day", price: 600 },
-  { cat: "unsubscribe", name: "Double Unsubscribe", desc: "Unsubscribe a double Gmail account", meta: "Delivery: 1 day", price: 1000 },
+  { cat: "unsubscribe", name: "Single Unsubscribe", desc: "Unsubscribe a single Gmail account", meta: "Delivery: 5 minutes", price: 600 },
+  { cat: "unsubscribe", name: "Double Unsubscribe", desc: "Unsubscribe a double Gmail account", meta: "Delivery: 5 minutes", price: 1000 },
 
   // Craftland Bots
   { cat: "craftland", name: "Craftland Followers", desc: "₹25 per 50 followers", meta: "Limit 200/day • 6hr–24hr", price: 25 },
@@ -55,6 +55,14 @@ function renderCards() {
         </div>
       </article>
     `).join("");
+
+  // Telegram contact shown ONLY inside the Free Fire Carding section
+  const tgNote = document.getElementById("tgContact");
+  if (tgNote) {
+    tgNote.innerHTML = activeCat === "diamonds"
+      ? `Need help? <a href="https://t.me/carderffgupta" target="_blank" rel="noopener">Contact Admin on Telegram (@carderffgupta)</a>`
+      : "";
+  }
 }
 
 function renderNav() {
