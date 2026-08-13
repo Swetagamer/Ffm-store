@@ -108,6 +108,9 @@ function openCheckout(index) {
   const idInput = document.getElementById("uid");
   const labelText = document.getElementById("uidLabelText");
   const playerField = document.getElementById("playerField");
+  const playerInput = document.getElementById("player");
+  const playerLabelText = document.getElementById("playerLabelText");
+  const playerHelp = document.getElementById("playerHelp");
 
   if (isUnsubscribe(selected)) {
     // Unsubscribe services collect a Gmail address instead of a Free Fire UID
@@ -125,6 +128,23 @@ function openCheckout(index) {
     idInput.setAttribute("type", "text");
     idInput.setAttribute("placeholder", "Enter UID");
     if (playerField) playerField.style.display = "";
+  }
+
+  // Free Fire Carding checkout ONLY: swap the second field to a contact number.
+  // Every other service keeps the "Player name (optional)" field unchanged.
+  if (playerInput) playerInput.value = "";
+  if (selected.cat === "diamonds") {
+    playerLabelText.textContent = "Contact Number";
+    playerInput.setAttribute("type", "tel");
+    playerInput.setAttribute("inputmode", "tel");
+    playerInput.setAttribute("placeholder", "Enter your WhatsApp/Telegram number");
+    playerHelp.textContent = "Add your contact number so I can contact you about your order.";
+  } else {
+    playerLabelText.textContent = "Player name (optional)";
+    playerInput.setAttribute("type", "text");
+    playerInput.setAttribute("inputmode", "text");
+    playerInput.setAttribute("placeholder", "Enter player name");
+    playerHelp.textContent = "";
   }
 
   document.getElementById("checkout").classList.remove("hidden");
