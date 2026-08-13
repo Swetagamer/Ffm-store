@@ -29,6 +29,7 @@
     </div>
     <nav id="catNav" class="cat-nav" aria-label="Service categories"></nav>
     <div id="serviceGrid" class="grid"></div>
+    <p id="tgContact" class="tg-contact"></p>
   </section>
 </main>
 
@@ -38,8 +39,9 @@
     <p class="eyebrow">CHECKOUT</p>
     <h2 id="checkoutTitle"></h2>
     <div class="price" id="checkoutPrice"></div>
-    <label>Free Fire UID<input id="uid" inputmode="numeric" placeholder="Enter UID"></label>
-    <label>Player name (optional)<input id="player" placeholder="Enter player name"></label>
+    <label><span id="uidLabelText">Free Fire UID</span><input id="uid" inputmode="numeric" placeholder="Enter UID"></label>
+    <label id="playerField"><span id="playerLabelText">Player name (optional)</span><input id="player" placeholder="Enter player name"></label>
+    <p id="playerHelp" class="field-help"></p>
     <button class="btn full" onclick="showPayment()">Continue to Payment</button>
   </div>
 </div>
